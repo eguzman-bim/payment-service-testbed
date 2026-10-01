@@ -1,27 +1,38 @@
 # Guía para proveedores de la herramienta DevSecOps
 
-Este repositorio contiene una API REST de pagos para una evaluación técnica de capacidades SAST, SCA y detección de secretos. El proveedor debe realizar la integración y configuración de su solución con sus propios procedimientos. El código de la aplicación es el punto de partida de la prueba.
+Este repositorio es el punto de partida de una PoC de SAST, SCA y detección de secretos sobre una API REST de pagos. **El proveedor prepara, ejecuta y presenta el escenario completo de extremo a extremo.** El equipo cliente observa la demostración final y la califica con su checklist; no introduce código, configura herramientas ni opera los pipelines durante la prueba.
 
-## Alcance de la demostración
+## Preparación a cargo del proveedor
 
-1. Explicar cómo se incorpora el repositorio a la plataforma y cómo se habilitan los análisis de código, dependencias y secretos.
-2. Mostrar el flujo de trabajo de un desarrollador y la información que recibe para corregir hallazgos.
-3. Configurar y demostrar controles para solicitudes de cambio hacia `develop` y para la revisión previa a `main`.
-4. Presentar cómo se distinguen hallazgos existentes de hallazgos introducidos durante la evaluación, incluyendo el tratamiento de falsos positivos.
-5. Explicar los criterios configurados para aprobar o bloquear cambios y mostrar el resultado real de esos controles.
+1. Crear una copia de trabajo propia (fork o repositorio de prueba) con `main` y `develop`, y registrar el commit de partida. Mantener la deuda de la línea base durante la prueba y conservar intacto el repositorio público de origen para que otros proveedores puedan usar el mismo punto de partida.
+2. Preparar su sandbox o tenant, el IDE con su extensión oficial y la integración con GitHub. Configurar por su cuenta los análisis, las políticas, los permisos, las compuertas y la automatización de los PR. El repositorio de origen no suministra workflows ni reglas de exclusión.
+3. Asegurar que los checks requeridos impidan realmente el merge cuando fallen. Documentar las versiones, políticas, umbrales y cualquier ajuste que influya en el resultado.
+4. Usar únicamente credenciales sintéticas para la demostración y mantener los secretos reales de la plataforma fuera del repositorio y de las capturas.
 
-La persona evaluadora introducirá cambios durante la sesión. El proveedor no debe modificar anticipadamente `main` ni `develop`, ni incorporar correcciones, exclusiones o reglas específicas del proyecto antes de que se acuerden en la demostración. Cualquier configuración necesaria debe quedar identificada y ser reproducible. La implementación de pipelines y compuertas corresponde íntegramente al proveedor.
+## Flujo que debe ejecutar y mostrar en vivo
 
-## Evidencias solicitadas
+### 1. Desarrollo local y Shift-Left
 
-- Configuración aplicada: productos o módulos habilitados, versiones, políticas, umbrales y alcance de cada análisis.
-- Resultados exportables de cada ejecución: identificador, fecha, commit o PR analizado, estado, duración y hallazgos con ubicación, severidad y recomendación.
-- Evidencia del resultado de los controles sobre PR, incluido el estado que observa el desarrollador y el motivo de aprobación o bloqueo.
-- Registro de triage: decisiones sobre duplicados, falsos positivos y hallazgos aceptados, con su justificación.
-- Limitaciones observadas, requisitos de licencia y pasos necesarios para reproducir la integración.
+Desde una rama `feature/*`, introducir una debilidad SAST y un secreto de prueba antes de abrir el PR. Mostrar su detección en el IDE, la explicación del hallazgo y una corrección asistida por IA aplicada en el editor. Mostrar en la consola central la métrica de desarrolladores activos que usan la extensión. El proveedor diseña sus propios cambios de prueba y muestra que la corrección conserva el funcionamiento de la API.
 
-Los reportes y credenciales del proveedor deben mantenerse fuera del código fuente del servicio. Usar mecanismos de secretos de la plataforma correspondiente; no incluir tokens en commits, comentarios de PR ni capturas de pantalla.
+### 2. Integración `feature/*` → `develop` (RC-01 y RC-03)
 
-## Condiciones de la evaluación
+Abrir un PR con un hallazgo Alto o Crítico nuevo, o con un secreto de prueba. Ejecutar análisis diferencial de SAST, SCA y secretos; demostrar qué cambios se analizaron y cómo se distingue la deuda previa. Mostrar un check fallido y un bloqueo efectivo del merge. Subir un commit corrector al mismo PR, mostrar el reanálisis automático, el check aprobado y el merge a `develop`.
 
-El repositorio no incluye workflows de CI/CD ni una configuración de escaneo suministrada por el cliente. No se proporciona un listado de hallazgos esperados. La evaluación se basará en la configuración que el proveedor implemente y en la evidencia que produzca sobre el código y los cambios realizados durante la sesión.
+### 3. Release `develop` → `main` (RC-02)
+
+Abrir el PR de release y ejecutar un análisis completo de SAST, SCA y secretos. Exportar un SBOM descargable en CycloneDX o SPDX. Mostrar la clasificación de hallazgos heredados frente a hallazgos nuevos y la decisión de la compuerta: la deuda heredada permanece visible y el PR limpio puede avanzar. Demostrar también que un hallazgo grave o secreto nuevo bloquearía el release, y cerrar la demostración con el PR nuevamente limpio. Si se presenta una capacidad de reachability, enseñar la evidencia de la ruta de ejecución que sustenta la clasificación.
+
+### 4. Dictamen en GitHub (F-02)
+
+Publicar automáticamente en el PR un comentario o Job Summary que muestre el estado de la compuerta, **0 vulnerabilidades nuevas y 0 secretos nuevos** en el caso aprobado, el recuento separado de deuda histórica y un enlace funcional al SBOM. El dictamen debe poder entenderse desde GitHub sin depender de una explicación verbal o de entrar en otra consola.
+
+## Evidencia que debe entregar y explicar
+
+- Enlaces a la copia de trabajo, ramas, commits, PR y ejecuciones de checks; indicar el commit de línea base y la secuencia temporal.
+- Evidencia del IDE antes del PR, de la corrección con IA y de la telemetría de adopción.
+- Resultados del PR a `develop` antes y después del commit corrector, incluido el bloqueo efectivo y la distinción entre cambios nuevos y deuda previa.
+- Resultados del PR a `main`, inventario completo de hallazgos, decisión de la compuerta, SBOM descargable y dictamen publicado en GitHub.
+- Configuración aplicada, duración de cada análisis, limitaciones observadas y pasos necesarios para reproducir la integración.
+
+La presentación final debe recorrer el flujo en ese orden y permitir inspeccionar los resultados reales. La configuración de pipelines y compuertas es responsabilidad íntegra del proveedor; no se entrega una lista pública de hallazgos esperados ni código de inyección preparado por el cliente.
