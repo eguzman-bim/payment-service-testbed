@@ -15,15 +15,15 @@ Este repositorio es el punto de partida de una PoC de SAST, SCA y detección de 
 
 Desde una rama `feature/*`, introducir una debilidad SAST y un secreto de prueba antes de abrir el PR. Mostrar su detección en el IDE, la explicación del hallazgo y una corrección asistida por IA aplicada en el editor. Mostrar en la consola central la métrica de desarrolladores activos que usan la extensión. El proveedor diseña sus propios cambios de prueba y muestra que la corrección conserva el funcionamiento de la API.
 
-### 2. Integración `feature/*` → `develop` (RC-01 y RC-03)
+### 2. Integración `feature/*` → `develop`
 
 Abrir un PR con un hallazgo Alto o Crítico nuevo, o con un secreto de prueba. Ejecutar análisis diferencial de SAST, SCA y secretos; demostrar qué cambios se analizaron y cómo se distingue la deuda previa. Mostrar un check fallido y un bloqueo efectivo del merge. Subir un commit corrector al mismo PR, mostrar el reanálisis automático, el check aprobado y el merge a `develop`.
 
-### 3. Release `develop` → `main` (RC-02)
+### 3. Release `develop` → `main`
 
 Abrir el PR de release y ejecutar un análisis completo de SAST, SCA y secretos. Exportar un SBOM descargable en CycloneDX o SPDX. Mostrar la clasificación de hallazgos heredados frente a hallazgos nuevos y la decisión de la compuerta: la deuda heredada permanece visible y el PR limpio puede avanzar. Demostrar también que un hallazgo grave o secreto nuevo bloquearía el release, y cerrar la demostración con el PR nuevamente limpio. Si se presenta una capacidad de reachability, enseñar la evidencia de la ruta de ejecución que sustenta la clasificación.
 
-### 4. Dictamen en GitHub (F-02)
+### 4. Dictamen en GitHub
 
 Publicar automáticamente en el PR un comentario o Job Summary que muestre el estado de la compuerta, **0 vulnerabilidades nuevas y 0 secretos nuevos** en el caso aprobado, el recuento separado de deuda histórica y un enlace funcional al SBOM. El dictamen debe poder entenderse desde GitHub sin depender de una explicación verbal o de entrar en otra consola.
 
