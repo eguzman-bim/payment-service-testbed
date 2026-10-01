@@ -1,4 +1,4 @@
-# Guía para proveedores de AppSec
+# Guía para proveedores de la herramienta DevSecOps
 
 Este repositorio contiene una API REST de pagos para una evaluación técnica de capacidades SAST, SCA y detección de secretos. El proveedor debe realizar la integración y configuración de su solución con sus propios procedimientos. El código de la aplicación es el punto de partida de la prueba.
 
