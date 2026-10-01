@@ -2,6 +2,8 @@
 
 API REST de pagos de demostración con Java 17, Spring Boot 3.5 y H2 en memoria.
 
+Si participas como proveedor de AppSec, consulta [GUIA_PROVEEDOR.md](GUIA_PROVEEDOR.md).
+
 ## Requisitos
 
 - JDK 17
